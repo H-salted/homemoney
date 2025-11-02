@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家庭管理系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px 0;
+        }
+        h1 {
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 70vh;
+        }
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .nav-link {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        .nav-link:hover {
+            background-color: #45a049;
+        }
+        .ledger-entry {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+        }
+        .input-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .input-form input, .input-form button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .input-form button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        .input-form button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>家庭管理系统</h1>
+    </header>
+    <div class="container">
+        <div id="ai-ledger-content">
+            
+            <!-- 账本内容将在这里动态加载 -->
+        </div>
+        <div class="nav-links">
+            <a href="food-wheel.html" class="nav-link">美食决策机</a>
+            <a href="ai-ledger.html" class="nav-link">AI智能账本</a>
+            <a href="budget-management.html" class="nav-link">预算管理</a>
+        </div>
+    </div>
+    <script>
+        // AI智能账本逻辑
+        const aiLedgerContent = document.getElementById("ai-ledger-content");
+        const dateInput = document.getElementById("date");
+        const categoryInput = document.getElementById("category");
+        const amountInput = document.getElementById("amount");
+        const submitBtn = document.getElementById("submit-btn");
+
+        // 从 localStorage 加载数据
+        function loadLedgerData() {
+            const savedData = localStorage.getItem("aiLedgerData");
+            return savedData ? JSON.parse(savedData) : [];
+        }
+
+        // 渲染账本数据
+        function renderAILedger() {
+            const data = loadLedgerData();
+            aiLedgerContent.innerHTML = `
+                ${data
+                    .map(
+                        (entry, index) => `
+                        <div class="ledger-entry">
+                            <p>日期: ${entry.date}</p>
+                            <p>类别: ${entry.category}</p>
+                            <p>金额: ${entry.amount}</p>
+                            <button onclick="deleteLedgerEntry(${index})">删除</button>
+                        </div>
+                    `
+                    )
+                    .join("")}
+            `;
+        }
+
+        // 删除记录
+        function deleteLedgerEntry(index) {
+            const data = loadLedgerData();
+            data.splice(index, 1);
+            localStorage.setItem("aiLedgerData", JSON.stringify(data));
+            renderAILedger();
+        }
+
+        // 初始化页面
+        renderAILedger();
+    </script>
+</body>
+</html>
