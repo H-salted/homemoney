@@ -1,147 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>预算管理</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px 0;
-        }
-        h1 {
-            margin: 0;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 70vh;
-        }
-        .nav-links {
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
-            margin-top: 30px;
-            justify-content: center;
-        }
-        .nav-link {
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 18px;
-            transition: background-color 0.3s;
-        }
-        .nav-link:hover {
-            background-color: #45a049;
-        }
-        .budget-entry {
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: white;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+      header {
+        background-color: #4caf50;
+        color: white;
+        padding: 20px 0;
+      }
+      h1 {
+        margin: 0;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 70vh;
+      }
+      .nav-links {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        margin-top: 30px;
+        justify-content: center;
+      }
+      .nav-link {
+        display: inline-block;
+        padding: 15px 30px;
+        background-color: #4caf50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 18px;
+        transition: background-color 0.3s;
+      }
+      .nav-link:hover {
+        background-color: #45a049;
+      }
+      .budget-entry {
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: white;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>家庭管理系统</h1>
+      <h1>家庭管理系统</h1>
     </header>
     <div class="container">
-        <h1>预算管理</h1>
-        <div id="budget-content">
-            <div class="input-form">
-                <input type="text" id="category" placeholder="类别">
-                <input type="number" id="amount" placeholder="预算金额">
-                <button id="submit-btn">添加预算</button>
-            </div>
-            <!-- 预算内容将在这里动态加载 -->
-        </div>
-        <nav class="nav-links">
-            <a href="food-wheel.html" class="nav-link">美食决策机</a>
-            <a href="ai-ledger.html" class="nav-link">AI智能账本</a>
-            <a href="index.html" class="nav-link">返回首页</a>
-        </nav>
+      <nav class="nav-links">
+        <a href="food-wheel.html" class="nav-link">美食决策机</a>
+        <a href="ai-ledger.html" class="nav-link">AI智能账本</a>
+        <a href="index.html" class="nav-link">返回首页</a>
+      </nav>
     </div>
-    <script>
-        // 从 localStorage 加载数据
-        function loadBudgetData() {
-            const savedData = localStorage.getItem("budgetData");
-            return savedData ? JSON.parse(savedData) : [];
-        }
-
-        // 保存数据到 localStorage
-        function saveBudgetData(data) {
-            localStorage.setItem("budgetData", JSON.stringify(data));
-        }
-
-        // 渲染预算数据
-        function renderBudget() {
-            const data = loadBudgetData();
-            const budgetContent = document.getElementById("budget-content");
-            budgetContent.innerHTML = `
-                <div class="input-form">
-                    <input type="text" id="category" placeholder="类别">
-                    <input type="number" id="amount" placeholder="预算金额">
-                    <button id="submit-btn">添加预算</button>
-                </div>
-                ${data
-                    .map(
-                        (entry, index) => `
-                        <div class="budget-entry">
-                            <p>类别: ${entry.category}</p>
-                            <p>预算金额: ${entry.amount}</p>
-                            <button onclick="deleteBudgetEntry(${index})">删除</button>
-                        </div>
-                    `
-                    )
-                    .join("")}
-            `;
-            // 重新绑定事件
-            document.getElementById("submit-btn").addEventListener("click", addBudgetEntry);
-        }
-
-        // 添加预算
-        function addBudgetEntry() {
-            const category = document.getElementById("category").value;
-            const amount = parseFloat(document.getElementById("amount").value);
-
-            if (category && !isNaN(amount)) {
-                const data = loadBudgetData();
-                data.push({ category, amount });
-                saveBudgetData(data);
-                renderBudget();
-                // 清空输入框
-                document.getElementById("category").value = "";
-                document.getElementById("amount").value = "";
-            } else {
-                alert("输入无效，请重试！");
-            }
-        }
-
-        // 删除预算
-        function deleteBudgetEntry(index) {
-            const data = loadBudgetData();
-            data.splice(index, 1);
-            saveBudgetData(data);
-            renderBudget();
-        }
-
-        // 初始化页面
-        renderBudget();
-    </script>
-</body>
+  </body>
 </html>
