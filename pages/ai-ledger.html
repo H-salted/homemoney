@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI智能账本</title>
-    <style>
+    <link rel="stylesheet" href="../styles/common.css">
+<style>
       body {
         font-family: Arial, sans-serif;
         text-align: center;
@@ -52,107 +53,6 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         width: 30%;
         min-width: 250px;
-      }
-
-      .form-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        margin: 20px 0;
-      }
-
-      .form-container input, .form-container select, .form-container button {
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        height: 36px;
-        width: 150px;
-        box-sizing: border-box;
-      }
-
-      .form-container button {
-        background-color: #4caf50;
-        color: white;
-        cursor: pointer;
-      }
-
-      .form-container select {
-        width: 150px;
-      }
-
-      @media (max-width: 600px) {
-        .form-container {
-          flex-direction: column;
-          gap: 8px;
-        }
-        .form-container input, .form-container select, .form-container button {
-          width: 100%;
-          max-width: 200px;
-        }
-      }
-
-      .table-container {
-        margin: 20px auto;
-        width: 80%;
-        max-width: 800px;
-      }
-
-      #records-table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-
-      #records-table th, #records-table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-      }
-
-      #records-table th {
-        background-color: #4caf50;
-        color: white;
-      }
-
-      #records-table tr:nth-child(even) {
-        background-color: #f2f2f2;
-      }
-
-      .data-table-container {
-        margin: 20px auto;
-        width: 80%;
-        max-width: 800px;
-      }
-
-      #data-table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-
-      #data-table th, #data-table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-      }
-
-      #data-table th {
-        background-color: #4caf50;
-        color: white;
-      }
-
-      #data-table tr:nth-child(even) {
-        background-color: #f2f2f2;
-      }
-
-      @media (max-width: 600px) {
-        .table-container {
-          width: 95%;
-        }
-        #records-table th, #records-table td {
-          padding: 6px;
-          font-size: 14px;
-        }
       }
 
       .pie-chart {
@@ -299,18 +199,8 @@
     </div>
       <div class="dashboard">
         <div class="dashboard-item">
-          <h2>月度收支</h2>
-          <p>收入: <span id="monthly-income">0元</span></p>
-          <p>支出: <span id="monthly-expense">0元</span></p>
-          <p>结余: <span id="monthly-balance">0元</span></p>
-        </div>
-        <div class="dashboard-item">
           <h2>消费类别</h2>
-          <div id="category-chart"></div>
-        </div>
-        <div class="dashboard-item">
-          <h2>支出趋势</h2>
-          <div id="trend-chart"></div>
+          <canvas id="category-chart" width="200" height="200"></canvas>
         </div>
       </div>
     </div>
@@ -363,18 +253,7 @@ function updateDashboard() {
   const now = Date.now();
   if (now - lastUpdateTime < 1000) return; // 1秒内不重复更新
   lastUpdateTime = now;
-        // 区分收入和支出
-        const monthlyIncome = ledgerData
-          .filter(entry => entry.amount > 0)
-          .reduce((sum, entry) => sum + entry.amount, 0);
-        const monthlyExpense = ledgerData
-          .filter(entry => entry.amount < 0)
-          .reduce((sum, entry) => sum + Math.abs(entry.amount), 0);
-        const monthlyBalance = monthlyIncome - monthlyExpense;
 
-        document.getElementById('monthly-income').textContent = `${monthlyIncome}元`;
-        document.getElementById('monthly-expense').textContent = `${monthlyExpense}元`;
-        document.getElementById('monthly-balance').textContent = `${monthlyBalance}元`;
 
         // 更新表格数据
         const tableBody = document.querySelector('#data-table tbody');
@@ -424,6 +303,7 @@ function updateDashboard() {
 
         // 动态生成消费类别数据
         const categoryChart = document.getElementById('category-chart');
+        const ctx = categoryChart.getContext('2d');
         const categories = {};
         ledgerData.forEach(entry => {
           if (!categories[entry.category]) {
@@ -433,32 +313,31 @@ function updateDashboard() {
         });
 
         const total = Object.values(categories).reduce((sum, amount) => sum + amount, 0);
-        let chartHTML = '<div class="pie-chart">';
-        let pieStartAngle = 0;
+        const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#E91E63', '#607D8B'];
         let startAngle = 0;
-
-        // 定义随机颜色生成函数
-        const getRandomColor = () => {
-          const letters = '0123456789ABCDEF';
-          let color = '#';
-          for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-          }
-          return color;
-        };
-
         for (const [category, amount] of Object.entries(categories)) {
           const percentage = ((amount / total) * 100).toFixed(1);
-          const angle = (amount / total) * 360;
-          chartHTML += `
-            <div class="pie-segment" style="--start: ${startAngle}deg; --end: ${startAngle + angle}deg; --color: ${getRandomColor()}">
-              <span>${category}: ${percentage}%</span>
-            </div>`;
+          const angle = (amount / total) * 2 * Math.PI;
+          const colorIndex = Object.keys(categories).indexOf(category) % colors.length;
+          ctx.fillStyle = colors[colorIndex];
+          ctx.beginPath();
+          ctx.moveTo(100, 100);
+          ctx.arc(100, 100, 100, startAngle, startAngle + angle);
+          ctx.closePath();
+          ctx.fill();
+          
+          // 添加文本标注
+          const midAngle = startAngle + angle / 2;
+          const textX = 100 + Math.cos(midAngle) * 60;
+          const textY = 100 + Math.sin(midAngle) * 60;
+          ctx.fillStyle = '#000';
+          ctx.font = '12px Arial';
+          ctx.fillText(`${category}: ${percentage}%`, textX, textY);
+          
           startAngle += angle;
         }
 
-        chartHTML += '</div>';
-        categoryChart.innerHTML = chartHTML;
+
 
         // 趋势图（暂不修改）
         const trendChart = document.getElementById('trend-chart');

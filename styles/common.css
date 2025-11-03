@@ -1,0 +1,87 @@
+/* Common styles for tables */
+.table-container, .data-table-container {
+  margin: 20px auto;
+  width: 80%;
+  max-width: 800px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-container table, #data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-container th, .table-container td, #data-table th, #data-table td {
+  border: 1px solid #e0e0e0;
+  padding: 12px;
+  text-align: center;
+}
+
+.table-container th, #data-table th {
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.table-container tr:nth-child(even), #data-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table-container tr:hover, #data-table tr:hover {
+  background-color: #f1f1f1;
+  transition: background-color 0.3s ease;
+}
+
+@media (max-width: 600px) {
+  .table-container {
+    width: 95%;
+  }
+  .table-container th, .table-container td {
+    padding: 8px;
+    font-size: 14px;
+  }
+}
+
+/* Common styles for forms */
+.form-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.form-container input, .form-container select, .form-container button {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 36px;
+  width: 150px;
+  box-sizing: border-box;
+}
+
+.form-container button {
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+.form-container select {
+  width: 150px;
+}
+
+@media (max-width: 600px) {
+  .form-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .form-container input, .form-container select, .form-container button {
+    width: 100%;
+    max-width: 200px;
+  }
+}
