@@ -83,8 +83,8 @@
       <h1>登录</h1>
       <form id="login-form">
         <div class="form-group">
-          <label for="username">用户名</label>
-          <input type="text" id="username" required />
+          <label for="email">邮箱</label>
+          <input type="email" id="email" required />
         </div>
         <div class="form-group">
           <label for="password">密码</label>
@@ -95,23 +95,56 @@
       <a href="register.html" class="link">没有账号？立即注册</a>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      document.getElementById("login-form").addEventListener("submit", (e) => {
+      // 初始化 Supabase 客户端
+      const supabaseUrl = 'https://xjpzxbqzecdkqjtswnhj.supabase.co';
+      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqcHp4YnF6ZWNka3FqdHN3bmhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMTc3MjQsImV4cCI6MjA3Nzc5MzcyNH0.IMi53aS9t58hrDJj_R3Wmb6N89BT8O3XsGy2KeoCMrA';
+      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+      document.getElementById("login-form").addEventListener("submit", async (e) => {
         e.preventDefault();
-        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
-        // 验证用户信息
-        const users = JSON.parse(localStorage.getItem("users")) || [];
-        const user = users.find(
-          (u) => u.username === username && u.password === password
-        );
+        // 验证邮箱格式
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          alert('请输入有效的邮箱地址！');
+          return;
+        }
 
-        if (user) {
-          localStorage.setItem("currentUser", JSON.stringify(user));
-          window.location.href = "index.html";
-        } else {
-          alert("用户名或密码错误！");
+        // 验证用户信息
+        try {
+          const { data: user, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email)
+            .maybeSingle();
+
+          if (error) {
+            alert(`登录失败：${error.message || '网络错误'}`);
+            console.error('Supabase 查询错误:', error);
+            return;
+          }
+
+          if (!user) {
+            alert('邮箱未注册！');
+            return;
+          }
+
+          // 验证密码（假设密码已哈希存储）
+          // 注意：此处仅为示例，实际应使用 bcrypt 或其他哈希库验证
+          const isPasswordValid = password === user.password;
+          if (!isPasswordValid) {
+            alert('密码错误！');
+            return;
+          }
+
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          window.location.href = 'index.html';
+        } catch (err) {
+          alert(`登录失败：${err.message || '系统错误'}`);
+          console.error('登录异常:', err);
         }
       });
     </script>

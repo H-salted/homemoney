@@ -88,8 +88,8 @@
       <h1>注册</h1>
       <form id="register-form">
         <div class="form-group">
-          <label for="username">用户名</label>
-          <input type="text" id="username" required />
+          <label for="email">邮箱</label>
+          <input type="email" id="email" required />
         </div>
         <div class="form-group">
           <label for="password">密码</label>
@@ -105,34 +105,88 @@
       <a href="login.html" class="link">已有账号？立即登录</a>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      document.getElementById('register-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
-        const errorElement = document.getElementById('password-error');
+      // 正确的 Supabase 初始化方式
+      const supabaseUrl = 'https://xjpzxbqzecdkqjtswnhj.supabase.co';
+      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqcHp4YnF6ZWNka3FqdHN3bmhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMTc3MjQsImV4cCI6MjA3Nzc5MzcyNH0.IMi53aS9t58hrDJj_R3Wmb6N89BT8O3XsGy2KeoCMrA';
+      
+      // 修正：使用 window.supabase.createClient
+      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        // 验证密码是否一致
-        if (password !== confirmPassword) {
-          errorElement.textContent = '密码不一致！';
-          return;
-        }
+      // 确保 DOM 加载完成后再绑定事件
+      window.addEventListener('load', () => {
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          const confirmPassword = document.getElementById('confirm-password').value;
+          const errorElement = document.getElementById('password-error');
 
-        // 验证用户名是否已存在
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const userExists = users.some(u => u.username === username);
+          // 验证密码是否一致
+          if (password !== confirmPassword) {
+            errorElement.textContent = '密码不一致！';
+            return;
+          }
 
-        if (userExists) {
-          errorElement.textContent = '用户名已存在！';
-          return;
-        }
+          try {
+            // 检查邮箱是否已存在
+            const { data: existingUser, error: queryError } = await supabase
+              .from('users')
+              .select('email')
+              .eq('email', email)
+              .maybeSingle();
 
-        // 保存用户信息
-        users.push({ username, password });
-        localStorage.setItem('users', JSON.stringify(users));
-        alert('注册成功！请登录。');
-        window.location.href = 'login.html';
+            if (queryError) {
+              errorElement.textContent = '网络错误，请重试！';
+              console.error('Supabase 查询错误:', queryError);
+              return;
+            }
+
+            if (existingUser) {
+              errorElement.textContent = '邮箱已存在！';
+              return;
+            }
+
+            // 插入用户数据到 Supabase
+            const { data, error } = await supabase
+              .from('users')
+              .insert([
+                { 
+                  email: email, 
+                  password: password,
+                  created_at: new Date().toISOString()
+                }
+              ], {
+                returning: 'minimal',
+                headers: {
+                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Content-Type': 'application/json',
+                  'Prefer': 'return=representation'
+                }
+              });
+
+            if (error) {
+              errorElement.textContent = `注册失败：${error.message}`;
+              console.error('Supabase 插入错误:', error);
+              return;
+            }
+
+            // 确保插入成功
+            if (!data) {
+              errorElement.textContent = '注册失败：数据未插入';
+              console.error('Supabase 插入失败：无返回数据');
+              return;
+            }
+            console.log('Supabase 插入成功:', data);
+
+            alert('注册成功！请登录。');
+            window.location.href = 'login.html';
+          } catch (err) {
+            errorElement.textContent = '注册失败，请重试！';
+            console.error(err);
+          }
+        });
       });
     </script>
   </body>
