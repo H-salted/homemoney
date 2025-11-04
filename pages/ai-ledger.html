@@ -5,16 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI智能账本</title>
     <link rel="stylesheet" href="../styles/common.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script>
+      // 检查用户是否登录
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) {
+        window.location.href = 'login.html';
+      }
+    </script>
 <style>
       body {
         font-family: Arial, sans-serif;
         text-align: center;
         margin: 0;
         padding: 0;
-        background-color: #f4f4f9;
+        background-color: #f8f9fa;
         display: flex;
         flex-direction: column;
         min-height: 100vh;
+      }
+
+      header {
+        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        color: white;
+        padding: 20px 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-link {
+        display: inline-block;
+        padding: 15px 30px;
+        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 18px;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .nav-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .dashboard-item {
+        background-color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .dashboard-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      #category-chart {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        overflow: hidden;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid rgba(255, 255, 255, 0.3);
       }
 
       .container {
@@ -167,8 +223,20 @@
         <a href="index.html" class="nav-link">返回首页</a>
       </nav>
       <div class="input-form">
+        <h>AI智能账本</h>
         <div class="form-container">
         <input type="text" id="date" placeholder="日期（YYYY-MM-DD）" />
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+        <script>
+          flatpickr("#date", {
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            locale: "zh",
+            defaultDate: "today",
+            maxDate: "today"
+          });
+        </script>
         <select id="category">
           <option value="餐饮">餐饮</option>
           <option value="交通">交通</option>
@@ -254,65 +322,70 @@ function updateDashboard() {
   if (now - lastUpdateTime < 1000) return; // 1秒内不重复更新
   lastUpdateTime = now;
 
+  // 更新表格数据
+  const tableBody = document.querySelector('#data-table tbody');
+  if (tableBody) {
+    tableBody.innerHTML = '';
+    ledgerData.forEach((entry, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${entry.date}</td>
+        <td>${entry.category}</td>
+        <td>${entry.amount}</td>
+        <td>
+          <button class="edit-btn" data-index="${index}">编辑</button>
+          <button class="delete-btn" data-index="${index}">删除</button>
+        </td>
+      `;
+      // 添加淡入动画
+      row.style.opacity = '0';
+      row.style.transition = 'opacity 0.5s ease';
+      tableBody.appendChild(row);
+      // 触发动画
+      setTimeout(() => {
+        row.style.opacity = '1';
+      }, index * 100);
+    });
 
-        // 更新表格数据
-        const tableBody = document.querySelector('#data-table tbody');
-        tableBody.innerHTML = '';
-        ledgerData.forEach((entry, index) => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${entry.date}</td>
-            <td>${entry.category}</td>
-            <td>${entry.amount}</td>
-            <td>
-              <button class="edit-btn" data-index="${index}">编辑</button>
-              <button class="delete-btn" data-index="${index}">删除</button>
-            </td>
-          `;
-          // 添加淡入动画
-          row.style.opacity = '0';
-          row.style.transition = 'opacity 0.5s ease';
-          tableBody.appendChild(row);
-          // 触发动画
-          setTimeout(() => {
-            row.style.opacity = '1';
-          }, index * 100);
-        });
+    // 添加编辑和删除按钮的事件监听
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const index = this.getAttribute('data-index');
+        const record = ledgerData[index];
+        document.getElementById('date').value = record.date;
+        document.getElementById('category').value = record.category;
+        document.getElementById('amount').value = record.amount;
+        // 标记当前编辑的索引
+        currentEditIndex = index;
+      });
+    });
 
-        // 添加编辑和删除按钮的事件监听
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const index = this.getAttribute('data-index');
-            const record = ledgerData[index];
-            document.getElementById('date').value = record.date;
-            document.getElementById('category').value = record.category;
-            document.getElementById('amount').value = record.amount;
-            // 标记当前编辑的索引
-            currentEditIndex = index;
-          });
-        });
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const index = this.getAttribute('data-index');
+        ledgerData.splice(index, 1);
+        localStorage.setItem('aiLedgerData', JSON.stringify(ledgerData));
+        updateDashboard();
+      });
+    });
+  }
 
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const index = this.getAttribute('data-index');
-            ledgerData.splice(index, 1);
-            localStorage.setItem('aiLedgerData', JSON.stringify(ledgerData));
-            updateDashboard();
-          });
-        });
+  // 动态生成消费类别数据
+  const categoryChart = document.getElementById('category-chart');
+  if (categoryChart) {
+    const ctx = categoryChart.getContext('2d');
+    if (ctx) {
+      ctx.clearRect(0, 0, categoryChart.width, categoryChart.height);
+      const categories = {};
+      ledgerData.forEach(entry => {
+        if (!categories[entry.category]) {
+          categories[entry.category] = 0;
+        }
+        categories[entry.category] += entry.amount;
+      });
 
-        // 动态生成消费类别数据
-        const categoryChart = document.getElementById('category-chart');
-        const ctx = categoryChart.getContext('2d');
-        const categories = {};
-        ledgerData.forEach(entry => {
-          if (!categories[entry.category]) {
-            categories[entry.category] = 0;
-          }
-          categories[entry.category] += entry.amount;
-        });
-
-        const total = Object.values(categories).reduce((sum, amount) => sum + amount, 0);
+      const total = Object.values(categories).reduce((sum, amount) => sum + amount, 0);
+      if (total > 0) {
         const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#E91E63', '#607D8B'];
         let startAngle = 0;
         for (const [category, amount] of Object.entries(categories)) {
@@ -336,13 +409,16 @@ function updateDashboard() {
           
           startAngle += angle;
         }
-
-
-
-        // 趋势图（暂不修改）
-        const trendChart = document.getElementById('trend-chart');
-        trendChart.innerHTML = '<p>本月: 3000元</p><p>上月: 2500元</p>';
       }
+    }
+  }
+
+  // 趋势图（暂不修改）
+  const trendChart = document.getElementById('trend-chart');
+  if (trendChart) {
+    trendChart.innerHTML = '<p>本月: 3000元</p><p>上月: 2500元</p>';
+  }
+}
 
       // 初始化仪表盘
       updateDashboard();

@@ -80,10 +80,7 @@
         <h1>家庭管理系统</h1>
     </header>
     <div class="container">
-        <div id="ai-ledger-content">
-            
-            <!-- 账本内容将在这里动态加载 -->
-        </div>
+        
         <div class="nav-links">
             <a href="food-wheel.html" class="nav-link">美食决策机</a>
             <a href="ai-ledger.html" class="nav-link">AI智能账本</a>
@@ -91,8 +88,48 @@
         </div>
     </div>
     <script>
-        // 框架初始化
-        console.log('框架已加载');
+        // AI智能账本逻辑
+        const aiLedgerContent = document.getElementById("ai-ledger-content");
+        const dateInput = document.getElementById("date");
+        const categoryInput = document.getElementById("category");
+        const amountInput = document.getElementById("amount");
+        const submitBtn = document.getElementById("submit-btn");
+
+        // 从 localStorage 加载数据
+        function loadLedgerData() {
+            const savedData = localStorage.getItem("aiLedgerData");
+            return savedData ? JSON.parse(savedData) : [];
+        }
+
+        // 渲染账本数据
+        function renderAILedger() {
+            const data = loadLedgerData();
+            aiLedgerContent.innerHTML = `
+                ${data
+                    .map(
+                        (entry, index) => `
+                        <div class="ledger-entry">
+                            <p>日期: ${entry.date}</p>
+                            <p>类别: ${entry.category}</p>
+                            <p>金额: ${entry.amount}</p>
+                            <button onclick="deleteLedgerEntry(${index})">删除</button>
+                        </div>
+                    `
+                    )
+                    .join("")}
+            `;
+        }
+
+        // 删除记录
+        function deleteLedgerEntry(index) {
+            const data = loadLedgerData();
+            data.splice(index, 1);
+            localStorage.setItem("aiLedgerData", JSON.stringify(data));
+            renderAILedger();
+        }
+
+        // 初始化页面
+        renderAILedger();
     </script>
 </body>
 </html>

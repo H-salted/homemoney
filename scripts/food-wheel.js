@@ -42,6 +42,12 @@ function initWheelOptions() {
       alert("未找到该选项！");
     }
   });
+
+  // 清空历史记录
+  clearHistoryBtn.addEventListener("click", function () {
+    localStorage.removeItem("wheelHistory");
+    historyList.innerHTML = "";
+  });
 }
 
 // 初始化轮盘
@@ -50,6 +56,14 @@ function initWheel() {
   wheelCanvas.height = 300;
   drawWheel();
   initWheelOptions();
+
+  // 初始化历史记录
+  const history = JSON.parse(localStorage.getItem("wheelHistory")) || [];
+  history.forEach(item => {
+    const historyItem = document.createElement("li");
+    historyItem.textContent = item;
+    historyList.appendChild(historyItem);
+  });
 }
 
 // 绘制轮盘
@@ -124,6 +138,11 @@ function spinWheel() {
       const historyItem = document.createElement("li");
       historyItem.textContent = `${new Date().toLocaleString()}: ${selectedOption}`;
       historyList.appendChild(historyItem);
+
+      // 存储历史记录到 localStorage
+      const history = JSON.parse(localStorage.getItem("wheelHistory")) || [];
+      history.push(`${new Date().toLocaleString()}: ${selectedOption}`);
+      localStorage.setItem("wheelHistory", JSON.stringify(history));
     }
   }
 
