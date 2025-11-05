@@ -10,10 +10,6 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
     <script src="../scripts/common.js"></script>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>美食决策机</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
@@ -208,30 +204,5 @@
         <a href="budget-management.html" class="nav-link">预算管理</a>
     </nav>
     <script src="../scripts/food-wheel.js"></script>
-    <div id="settings-modal" class="settings-modal">
-      <div class="settings-content">
-        <h2>设置</h2>
-        <div>
-          <label for="user-name">姓名</label>
-          <input type="text" id="user-name" class="settings-input">
-        </div>
-        <div>
-          <label for="user-email">邮箱</label>
-          <input type="email" id="user-email" class="settings-input">
-        </div>
-        <div>
-          <label for="theme-preference">主题偏好</label>
-          <select id="theme-preference" class="settings-input">
-            <option value="">默认</option>
-            <option value="dark-theme">暗色</option>
-            <option value="light-theme">亮色</option>
-          </select>
-        </div>
-        <div class="settings-buttons">
-          <button onclick="closeSettings()" class="cancel-button">取消</button>
-          <button onclick="saveSettings()" class="save-button">保存</button>
-        </div>
-      </div>
-    </div>
   </body>
 </html>

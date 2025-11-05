@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>个人设置</title>
+    <link rel="stylesheet" href="../styles/common.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+      .settings-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+      .settings-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .settings-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+      }
+      .settings-section h2 {
+        border-bottom: 2px solid #4caf50;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        color: #333;
+      }
+      .settings-item {
+        margin-bottom: 20px;
+      }
+      .settings-item label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+      }
+      .settings-item input, .settings-item select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+      .settings-item button {
+        padding: 12px 24px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+      .settings-item button:hover {
+        background-color: #45a049;
+      }
+      .avatar-container {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .avatar-preview {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #4caf50;
+      }
+      @media (max-width: 768px) {
+        .settings-container {
+          padding: 20px;
+          margin: 10px;
+        }
+        .settings-section {
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="settings-container">
+      <div class="settings-header">
+        <h1>个人设置</h1>
+      </div>
+
+      <!-- 头像功能 -->
+      <div class="settings-section">
+        <h2>头像</h2>
+        <div class="settings-item">
+          <label for="avatar">头像</label>
+          <div class="avatar-container">
+            <img id="avatar-preview" class="avatar-preview" src="" alt="头像预览" />
+            <div>
+              <input type="file" id="avatar" accept="image/*" />
+              <button onclick="uploadAvatar()">上传</button>
+              <button onclick="removeAvatar()">删除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 账户与安全 -->
+      <div class="settings-section">
+        <h2>账户与安全</h2>
+        <div class="settings-item">
+          <label for="username">用户名</label>
+          <input type="text" id="username" placeholder="输入新用户名" />
+          <button onclick="updateUsername()">保存</button>
+        </div>
+      </div>
+
+      <!-- 隐私设置 -->
+      <div class="settings-section">
+        <h2>隐私设置</h2>
+        <div class="settings-item">
+          <label for="privacy-level">个人资料公开范围</label>
+          <select id="privacy-level">
+            <option value="public">公开</option>
+            <option value="friends">仅好友</option>
+            <option value="private">仅自己</option>
+          </select>
+          <button onclick="updatePrivacy()">保存</button>
+        </div>
+      </div>
+
+      <!-- 主题设置 -->
+      <div class="settings-section">
+        <h2>主题设置</h2>
+        <div class="settings-item">
+          <label for="theme">主题偏好</label>
+          <select id="theme">
+            <option value="light">亮色</option>
+            <option value="dark">暗色</option>
+          </select>
+          <button onclick="updateTheme()">应用</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 更新用户名
+      function updateUsername() {
+        const username = document.getElementById('username').value;
+        if (username) {
+          localStorage.setItem('username', username);
+          alert('用户名已更新！');
+        }
+      }
+
+      // 上传头像
+      function uploadAvatar() {
+        const fileInput = document.getElementById('avatar');
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            localStorage.setItem('avatar', e.target.result);
+            document.getElementById('avatar-preview').src = e.target.result;
+            alert('头像已上传！');
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      // 删除头像
+      function removeAvatar() {
+        localStorage.removeItem('avatar');
+        document.getElementById('avatar-preview').src = '';
+        alert('头像已删除！');
+      }
+
+      // 更新隐私设置
+      function updatePrivacy() {
+        const privacyLevel = document.getElementById('privacy-level').value;
+        localStorage.setItem('privacyLevel', privacyLevel);
+        alert('隐私设置已更新！');
+      }
+
+      // 更新主题
+      function updateTheme() {
+        const theme = document.getElementById('theme').value;
+        localStorage.setItem('theme', theme);
+        document.body.className = theme;
+        alert('主题已应用！');
+      }
+    </script>
+  </body>
+</html>

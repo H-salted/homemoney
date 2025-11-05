@@ -16,6 +16,27 @@
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
     />
     <style>
+      h {
+        font-size: 20px;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        color: white;
+        margin: 10px 0;
+        font-weight: bold;
+      }
+      h5 {
+        font-size: 32px;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        color: rgb(35, 160, 0);
+        margin: 10px 0;
+        font-weight: bold;
+      }
+      header {
+        background-color: #4caf50;
+        color: white;
+        padding: 20px 0;
+      }
       .nav-link {
         color: white;
         text-decoration: none;
@@ -56,6 +77,19 @@
           }
         </style>
         <style>
+      h {
+        font-size: 20px;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        color: white;
+        margin: 10px 0;
+        font-weight: bold;
+      }
+      header {
+        background-color: #4caf50;
+        color: white;
+        padding: 20px 0;
+      }
           body {
             font-family: "Roboto", Arial, sans-serif;
             background-color: #f8f9fa;
@@ -72,7 +106,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           }
           h1 {
-            color: #2e7d32;
+            color: #ffffff;
             text-align: center;
             margin-bottom: 30px;
             font-size: 2.2rem;
@@ -143,6 +177,43 @@
         <button onclick="openSettings()" class="settings-button">
           <i class="fas fa-cog"></i>
         </button>
+        <script>
+          function openSettings() {
+            document.getElementById('settings-modal').style.display = 'block';
+          }
+          function closeSettings() {
+            document.getElementById('settings-modal').style.display = 'none';
+          }
+          function saveSettings() {
+            const userName = document.getElementById('user-name').value;
+            const userEmail = document.getElementById('user-email').value;
+            const themePreference = document.getElementById('theme-preference').value;
+            
+            localStorage.setItem('userName', userName);
+            localStorage.setItem('userEmail', userEmail);
+            localStorage.setItem('themePreference', themePreference);
+            
+            applyTheme(themePreference);
+            closeSettings();
+          }
+          function applyTheme(theme) {
+            document.body.className = theme;
+          }
+          
+          // 加载保存的设置
+          document.addEventListener('DOMContentLoaded', () => {
+            const userName = localStorage.getItem('userName');
+            const userEmail = localStorage.getItem('userEmail');
+            const themePreference = localStorage.getItem('themePreference');
+            
+            if (userName) document.getElementById('user-name').value = userName;
+            if (userEmail) document.getElementById('user-email').value = userEmail;
+            if (themePreference) {
+              document.getElementById('theme-preference').value = themePreference;
+              applyTheme(themePreference);
+            }
+          });
+        </script>
         <header>
           <h1>家庭管理系统</h1>
         </header>
@@ -165,7 +236,7 @@
             <a href="ai-ledger.html" class="nav-link">AI智能账本</a>
             <a href="index.html" class="nav-link">返回首页</a>
           </nav>
-          <h1>预算管理</h1>
+          <h5>预算管理</h5>
           <div class="budget-section">
             <h2>预算周期</h2>
             <div class="budget-control">
@@ -357,128 +428,6 @@
             }
           }
         </script>
-        <div
-          id="settings-modal"
-          style="
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-          "
-        >
-          <div
-            style="
-              background-color: white;
-              width: 400px;
-              margin: 100px auto;
-              padding: 20px;
-              border-radius: 10px;
-            "
-          >
-            <h2>设置</h2>
-            <div style="margin-bottom: 15px">
-              <label for="user-name">姓名</label>
-              <input
-                type="text"
-                id="user-name"
-                style="
-                  width: 100%;
-                  padding: 8px;
-                  border: 1px solid #ddd;
-                  border-radius: 4px;
-                "
-              />
-            </div>
-            <div style="margin-bottom: 15px">
-              <label for="user-email">邮箱</label>
-              <input
-                type="email"
-                id="user-email"
-                style="
-                  width: 100%;
-                  padding: 8px;
-                  border: 1px solid #ddd;
-                  border-radius: 4px;
-                "
-              />
-            </div>
-            <div style="margin-bottom: 15px">
-              <label for="theme-preference">主题偏好</label>
-              <select
-                id="theme-preference"
-                style="
-                  width: 100%;
-                  padding: 8px;
-                  border: 1px solid #ddd;
-                  border-radius: 4px;
-                "
-              >
-                <option value="">默认</option>
-                <option value="dark-theme">暗色</option>
-                <option value="light-theme">亮色</option>
-              </select>
-            </div>
-            <div style="display: flex; justify-content: space-between">
-              <button
-                onclick="closeSettings()"
-                style="
-                  padding: 8px 16px;
-                  background-color: #f44336;
-                  color: white;
-                  border: none;
-                  border-radius: 4px;
-                  cursor: pointer;
-                "
-              >
-                取消
-              </button>
-              <button
-                onclick="saveSettings()"
-                style="
-                  padding: 8px 16px;
-                  background-color: #4caf50;
-                  color: white;
-                  border: none;
-                  border-radius: 4px;
-                  cursor: pointer;
-                "
-              >
-                保存
-              </button>
-            </div>
-          </div>
-        </div>
-        <div id="settings-modal" class="settings-modal">
-          <div class="settings-content">
-            <h2>设置</h2>
-            <div>
-              <label for="user-name">姓名</label>
-              <input type="text" id="user-name" class="settings-input" />
-            </div>
-            <div>
-              <label for="user-email">邮箱</label>
-              <input type="email" id="user-email" class="settings-input" />
-            </div>
-            <div>
-              <label for="theme-preference">主题偏好</label>
-              <select id="theme-preference" class="settings-input">
-                <option value="">默认</option>
-                <option value="dark-theme">暗色</option>
-                <option value="light-theme">亮色</option>
-              </select>
-            </div>
-            <div class="settings-buttons">
-              <button onclick="closeSettings()" class="cancel-button">
-                取消
-              </button>
-              <button onclick="saveSettings()" class="save-button">保存</button>
-            </div>
-          </div>
-        </div>
       </body>
     </html>
   </head>
