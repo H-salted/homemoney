@@ -30,18 +30,21 @@ function initWheelOptions() {
     }
   });
 
-  editOptionBtn.addEventListener("click", function () {
-    const oldOption = prompt("请输入要修改的选项名称：");
-    const index = wheelOptions.indexOf(oldOption);
-    if (index !== -1) {
-      const newOption = prompt("请输入新的选项名称：");
-      if (newOption) {
-        editOption(index, newOption);
+  const editOptionBtn = document.getElementById("edit-option-btn");
+  if (editOptionBtn) {
+    editOptionBtn.addEventListener("click", function () {
+      const oldOption = prompt("请输入要修改的选项名称：");
+      const index = wheelOptions.indexOf(oldOption);
+      if (index !== -1) {
+        const newOption = prompt("请输入新的选项名称：");
+        if (newOption) {
+          editOption(index, newOption);
+        }
+      } else {
+        alert("未找到该选项！");
       }
-    } else {
-      alert("未找到该选项！");
-    }
-  });
+    });
+  }
 
   // 清空历史记录
   clearHistoryBtn.addEventListener("click", function () {
@@ -59,7 +62,7 @@ function initWheel() {
 
   // 初始化历史记录
   const history = JSON.parse(localStorage.getItem("wheelHistory")) || [];
-  history.forEach(item => {
+  history.forEach((item) => {
     const historyItem = document.createElement("li");
     historyItem.textContent = item;
     historyList.appendChild(historyItem);
@@ -189,4 +192,6 @@ addOptionBtn.addEventListener("click", addWheelOption);
 clearHistoryBtn.addEventListener("click", clearHistory);
 
 // 初始化页面
-initWheel();
+document.addEventListener("DOMContentLoaded", function() {
+  initWheel();
+});

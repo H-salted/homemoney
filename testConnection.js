@@ -18,6 +18,13 @@ const { data: userData, error: userError } = await supabase
   .from('users')
   .insert([
     { id: '550e8400-e29b-41d4-a716-446655440000', name: 'Test User', email: 'test@example.com' }
+  ]);
+
+if (userError) {
+  console.error('插入失败:', userError);
+} else {
+  console.log('插入成功:', userData);
+}
   ], { returning: 'minimal' });
 
 if (userError) {

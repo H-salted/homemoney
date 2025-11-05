@@ -3,6 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="../styles/common.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <script src="../scripts/common.js"></script>
     <title>家庭管理系统</title>
     <style>
       body {
@@ -77,73 +84,67 @@
     </style>
   </head>
   <body>
-    <header>
-      <h1>家庭管理系统</h1>
-    </header>
-    <div class="container">
-      <div class="nav-links">
-        <a href="food-wheel.html" class="nav-link">美食决策机</a>
-        <a href="ai-ledger.html" class="nav-link">AI智能账本</a>
-        <a href="budget-management.html" class="nav-link">预算管理</a>
-      </div>
-      <div id="ai-ledger-content"></div>
-    </div>
-    <script>
-        // AI智能账本逻辑
-        const aiLedgerContent = document.getElementById("ai-ledger-content");
-        const dateInput = document.getElementById("date");
-        const categoryInput = document.getElementById("category");
-        const amountInput = document.getElementById("amount");
-        const submitBtn = document.getElementById("submit-btn");
+    </style>
+  </head>
+  <body>
+        <button onclick="openSettings()" class="settings-button">
+          <i class="fas fa-cog"></i>
+        </button>
+        <header>
+          <h1>家庭管理系统</h1>
+        </header>
+        <div class="container">
+          <div class="nav-links">
+            <a href="food-wheel.html" class="nav-link">美食决策机</a>
+            <a href="ai-ledger.html" class="nav-link">AI智能账本</a>
+            <a href="budget-management.html" class="nav-link">预算管理</a>
+          </div>
+        </div>
+        <script>
+          // AI智能账本逻辑
 
-        // 从 localStorage 加载数据
-        function loadLedgerData() {
+          const dateInput = document.getElementById("date");
+          const categoryInput = document.getElementById("category");
+          const amountInput = document.getElementById("amount");
+          const submitBtn = document.getElementById("submit-btn");
+
+          // 从 localStorage 加载数据
+          function loadLedgerData() {
             const savedData = localStorage.getItem("aiLedgerData");
             return savedData ? JSON.parse(savedData) : [];
-        }
+          }
 
-        // 渲染账本数据
-        function renderAILedger() {
-            const aiLedgerContent = document.getElementById('ai-ledger-content');
-            if (!aiLedgerContent) {
-              console.error('AI Ledger content container not found!');
-              return;
-            }
-            const data = loadLedgerData();
-            aiLedgerContent.innerHTML = data
-                .map((entry, index) => {
-                    if (!entry) return '';
-                    return `
-                        <div class="ledger-entry" key="${index}">
-                            <p>日期: ${entry.date || '无'}</p>
-                            <p>类别: ${entry.category || '无'}</p>
-                            <p>金额: ${entry.amount || '无'}</p>
-                            <button onclick="deleteLedgerEntry(${index})">删除</button>
-                        </div>
-                    `;
-                })
-                .join('');
-        }
-
-        // 确保 DOM 加载完成后再执行
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAILedger();
-        });
-
-        // 删除记录
-        function deleteLedgerEntry(index) {
-            const data = loadLedgerData();
-            if (index < 0 || index >= data.length) {
-                console.error('Invalid index for deletion:', index);
-                return;
-            }
-            data.splice(index, 1);
-            localStorage.setItem("aiLedgerData", JSON.stringify(data));
-            renderAILedger();
-        }
-
-        // 初始化页面
-        renderAILedger();
-    </script>
-  </body>
+          // 渲染账本数据
+          
+        </script>
+        <div id="settings-modal" class="settings-modal">
+          <div class="settings-content">
+            <h2>设置</h2>
+            <div>
+              <label for="user-name">姓名</label>
+              <input type="text" id="user-name" class="settings-input" />
+            </div>
+            <div>
+              <label for="user-email">邮箱</label>
+              <input type="email" id="user-email" class="settings-input" />
+            </div>
+            <div>
+              <label for="theme-preference">主题偏好</label>
+              <select id="theme-preference" class="settings-input">
+                <option value="">默认</option>
+                <option value="dark-theme">暗色</option>
+                <option value="light-theme">亮色</option>
+              </select>
+            </div>
+            <div class="settings-buttons">
+              <button onclick="closeSettings()" class="cancel-button">
+                取消
+              </button>
+              <button onclick="saveSettings()" class="save-button">保存</button>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+  </head>
 </html>

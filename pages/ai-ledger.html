@@ -3,15 +3,124 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="../styles/common.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <script src="../scripts/common.js"></script>
     <title>AI智能账本</title>
-    <link rel="stylesheet" href="../styles/common.css">
+    <link rel="stylesheet" href="../styles/ai-ledger.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+      h1 {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        color: #ffffff;
+        margin: 20px 0;
+      }
+      h {
+        font-size: 20px;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        color: #48c81a;
+        margin: 10px 0;
+        font-weight: bold;
+      }
+      .nav-link {
+        display: inline-block;
+        padding: 15px 30px;
+        background-color: #4caf50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 18px;
+        transition: background-color 0.3s;
+      }
+      #category {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+      .nav-link:hover {
+        background-color: #45a049;
+      }
+      .ledger-entry {
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-left: 2px solid #4caf50;
+        border-right: 2px solid #4caf50;
+        border-radius: 5px;
+        background-color: white;
+      }
+      .input-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 20px 0;
+      }
+      .input-form input,
+      .input-form button {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .input-form button {
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .input-form button:hover {
+        background-color: #45a049;
+      }
+          }
+          .input-form button:hover {
+            background-color: #45a049;
+          }
+        </style>
     <script>
       // 检查用户是否登录
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       if (!currentUser) {
         window.location.href = 'login.html';
       }
+
+      // 计算总计
+      function updateTotal() {
+        const totalAmountElement = document.getElementById('total-amount');
+        if (!totalAmountElement) {
+          console.error('总计行未找到，请检查表格结构。');
+          return;
+        }
+        const rows = document.querySelectorAll('tbody tr');
+        let total = 0;
+        rows.forEach(row => {
+          const amountCell = row.querySelector('td:nth-child(3)');
+          if (amountCell) {
+            const amount = parseFloat(amountCell.textContent) || 0;
+            total += amount;
+          }
+        });
+        totalAmountElement.textContent = total.toFixed(2);
+      }
+
+      // 监听表格变化（优化性能）
+      document.addEventListener('DOMContentLoaded', () => {
+        updateTotal();
+        const table = document.querySelector('table');
+        if (table) {
+          const observer = new MutationObserver((mutations) => {
+            // 仅在表格内容实际变化时更新总计
+            if (mutations.some(mutation => mutation.type === 'childList')) {
+              updateTotal();
+            }
+          });
+          observer.observe(table, { childList: true, subtree: false });
+        }
+      });
     </script>
 <style>
       body {
@@ -176,6 +285,10 @@
         font-size: 18px;
         transition: background-color 0.3s;
       }
+      #category {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
       .nav-link:hover {
         background-color: #45a049;
       }
@@ -183,6 +296,8 @@
         margin: 10px;
         padding: 10px;
         border: 1px solid #ddd;
+        border-left: 2px solid #4caf50;
+        border-right: 2px solid #4caf50;
         border-radius: 5px;
         background-color: white;
       }
@@ -213,6 +328,9 @@
     </style>
   </head>
   <body>
+    <button onclick="openSettings()" class="settings-button">
+      <i class="fas fa-cog"></i>
+    </button>
     <header>
       <h1>家庭管理系统</h1>
     </header>
@@ -263,6 +381,12 @@
         <tbody>
           <!-- 数据将通过 JavaScript 动态填充 -->
         </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2"><strong>总计</strong></td>
+          <td id="total-amount">0.00</td>
+        </tr>
+      </tfoot>
       </table>
     </div>
       <div class="dashboard">
@@ -312,7 +436,7 @@
         // 清空输入框
         document.getElementById('date').value = '';
         document.getElementById('amount').value = '';
-        alert(currentEditIndex === -1 ? '记录添加成功！' : '记录更新成功！');
+        
       });
 
       // 更新仪表盘
@@ -418,10 +542,38 @@ function updateDashboard() {
   if (trendChart) {
     trendChart.innerHTML = '<p>本月: 3000元</p><p>上月: 2500元</p>';
   }
+
+  // 更新总计数值
+  updateTotal();
 }
 
       // 初始化仪表盘
       updateDashboard();
     </script>
+      <div id="settings-modal" class="settings-modal">
+      <div class="settings-content">
+        <h2>设置</h2>
+        <div>
+          <label for="user-name">姓名</label>
+          <input type="text" id="user-name" class="settings-input">
+        </div>
+        <div>
+          <label for="user-email">邮箱</label>
+          <input type="email" id="user-email" class="settings-input">
+        </div>
+        <div>
+          <label for="theme-preference">主题偏好</label>
+          <select id="theme-preference" class="settings-input">
+            <option value="">默认</option>
+            <option value="dark-theme">暗色</option>
+            <option value="light-theme">亮色</option>
+          </select>
+        </div>
+        <div class="settings-buttons">
+          <button onclick="closeSettings()" class="cancel-button">取消</button>
+          <button onclick="saveSettings()" class="save-button">保存</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
