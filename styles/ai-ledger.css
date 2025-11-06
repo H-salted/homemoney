@@ -6,16 +6,23 @@ table {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-th, td {
+th,
+td {
   padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #a4f0a7;
+  border-right: 1px solid #bbdca6;
 }
 
 th {
   background-color: #4caf50;
   color: white;
   font-weight: bold;
+}
+
+th:last-child,
+td:last-child {
+  border-right: none;
 }
 
 tr:hover {
@@ -43,7 +50,9 @@ button:hover {
 }
 
 /* 标题样式 */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   color: #333;
   margin-bottom: 20px;
 }
