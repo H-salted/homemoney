@@ -10,11 +10,12 @@ const clearHistoryBtn = document.getElementById("clear-history-btn");
 const deleteOptionBtn = document.getElementById("delete-option-btn");
 const editOptionBtn = document.getElementById("edit-option-btn");
 
-let wheelOptions = JSON.parse(localStorage.getItem("wheelOptions")) || [];
+let wheelOptions = [];
 let spinning = false;
 
 // 初始化轮盘选项
 function initWheelOptions() {
+  wheelOptions = JSON.parse(localStorage.getItem("wheelOptions")) || [];
   if (wheelOptions.length > 0) {
     drawWheel();
   }
@@ -47,9 +48,11 @@ function initWheelOptions() {
   }
 
   // 清空历史记录
-  clearHistoryBtn.addEventListener("click", function () {
-    localStorage.removeItem("wheelHistory");
-    historyList.innerHTML = "";
+  document.addEventListener("DOMContentLoaded", function () {
+    clearHistoryBtn.addEventListener("click", function () {
+      localStorage.removeItem("wheelHistory");
+      historyList.innerHTML = "";
+    });
   });
 }
 
@@ -143,9 +146,11 @@ function spinWheel() {
       historyList.appendChild(historyItem);
 
       // 存储历史记录到 localStorage
-      const history = JSON.parse(localStorage.getItem("wheelHistory")) || [];
-      history.push(`${new Date().toLocaleString()}: ${selectedOption}`);
-      localStorage.setItem("wheelHistory", JSON.stringify(history));
+      document.addEventListener("DOMContentLoaded", function () {
+        const history = JSON.parse(localStorage.getItem("wheelHistory")) || [];
+        history.push(`${new Date().toLocaleString()}: ${selectedOption}`);
+        localStorage.setItem("wheelHistory", JSON.stringify(history));
+      });
     }
   }
 
@@ -157,7 +162,9 @@ function addWheelOption() {
   const option = wheelOptionInput.value.trim();
   if (option) {
     wheelOptions.push(option);
-    localStorage.setItem("wheelOptions", JSON.stringify(wheelOptions));
+    document.addEventListener("DOMContentLoaded", function () {
+      localStorage.setItem("wheelOptions", JSON.stringify(wheelOptions));
+    });
     wheelOptionInput.value = "";
     drawWheel();
   }
@@ -167,7 +174,9 @@ function addWheelOption() {
 function deleteOption(index) {
   if (wheelOptions.length > 0 && index >= 0 && index < wheelOptions.length) {
     wheelOptions.splice(index, 1);
-    localStorage.setItem("wheelOptions", JSON.stringify(wheelOptions));
+    document.addEventListener("DOMContentLoaded", function () {
+      localStorage.setItem("wheelOptions", JSON.stringify(wheelOptions));
+    });
     drawWheel();
   }
 }
@@ -176,7 +185,9 @@ function deleteOption(index) {
 function editOption(index, newOption) {
   if (wheelOptions.length > 0 && index >= 0 && index < wheelOptions.length) {
     wheelOptions[index] = newOption;
-    localStorage.setItem("wheelOptions", JSON.stringify(wheelOptions));
+    document.addEventListener("DOMContentLoaded", function () {
+      localStorage.setItem("wheelOptions", JSON.stringify(wheelOptions));
+    });
     drawWheel();
   }
 }

@@ -1,0 +1,59 @@
+/* 全局主题样式 */
+
+/* 亮色主题 */
+body.light {
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+body.light .container {
+  background-color: white;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+body.light .section {
+  background-color: #f9f9f9;
+}
+
+body.light h2 {
+  color: #333;
+}
+
+body.light label {
+  color: #555;
+}
+
+body.light input,
+body.light select {
+  border: 1px solid #ddd;
+}
+
+/* 暗色主题 */
+body.dark {
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+}
+
+body.dark .container {
+  background-color: #2d2d2d;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .section {
+  background-color: #3d3d3d;
+}
+
+body.dark h2 {
+  color: #f0f0f0;
+}
+
+body.dark label {
+  color: #ccc;
+}
+
+body.dark input,
+body.dark select {
+  background-color: #2d2d2d;
+  border: 1px solid #555;
+  color: #f0f0f0;
+}

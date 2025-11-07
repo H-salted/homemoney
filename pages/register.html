@@ -5,225 +5,210 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" href="../styles/common.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="../styles/theme.css" />
+    <script src="../scripts/theme.js"></script>
+    <link rel="stylesheet" href="../assets/font-awesome.min.css" />
     <script src="../scripts/common.js"></script>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>注册</title>
-    <link rel="stylesheet" href="../styles/common.css">
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin: 0;
-        padding: 0;
-        background-color: #f8f9fa;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-
-      .container {
-        width: 90%;
-        max-width: 400px;
-        margin: 50px auto;
-        padding: 20px;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      h1 {
-        margin-bottom: 20px;
-      }
-
-      .form-group {
-        margin-bottom: 15px;
-        text-align: left;
-      }
-
-      label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
-
-      input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        box-sizing: border-box;
-      }
-
-      button {
-        width: 100%;
-        padding: 10px;
-        background-color: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-
-      button:hover {
-        background-color: #45a049;
-      }
-
-      .link {
-        margin-top: 15px;
-        display: block;
-        color: #4caf50;
-        text-decoration: none;
-      }
-
-      .link:hover {
-        text-decoration: underline;
-      }
-
-      .error {
-        color: red;
-        font-size: 14px;
-        margin-top: 5px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>注册</h1>
-      <form id="register-form">
-        <div class="form-group">
-          <label for="email">邮箱</label>
-          <input type="email" id="email" required />
-        </div>
-        <div class="form-group">
-          <label for="password">密码</label>
-          <input type="password" id="password" required />
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">确认密码</label>
-          <input type="password" id="confirm-password" required />
-          <div id="password-error" class="error"></div>
-        </div>
-        <button type="submit">注册</button>
-      </form>
-      <a href="login.html" class="link">已有账号？立即登录</a>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-      // 正确的 Supabase 初始化方式
-      const supabaseUrl = 'https://xjpzxbqzecdkqjtswnhj.supabase.co';
-      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqcHp4YnF6ZWNka3FqdHN3bmhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMTc3MjQsImV4cCI6MjA3Nzc5MzcyNH0.IMi53aS9t58hrDJj_R3Wmb6N89BT8O3XsGy2KeoCMrA';
-      
-      // 修正：使用 window.supabase.createClient
-      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-      // 确保 DOM 加载完成后再绑定事件
-      window.addEventListener('load', () => {
-        document.getElementById('register-form').addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const email = document.getElementById('email').value;
-          const password = document.getElementById('password').value;
-          const confirmPassword = document.getElementById('confirm-password').value;
-          const errorElement = document.getElementById('password-error');
-
-          // 验证密码是否一致
-          if (password !== confirmPassword) {
-            errorElement.textContent = '密码不一致！';
-            return;
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>注册</title>
+        <link rel="stylesheet" href="../styles/common.css" />
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
           }
 
-          try {
-            // 检查邮箱是否已存在
-            const { data: existingUser, error: queryError } = await supabase
-              .from('users')
-              .select('email')
-              .eq('email', email)
-              .maybeSingle();
+          .container {
+            width: 90%;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
 
-            if (queryError) {
-              errorElement.textContent = '网络错误，请重试！';
-              console.error('Supabase 查询错误:', queryError);
-              return;
-            }
+          h1 {
+            margin-bottom: 20px;
+          }
 
-            if (existingUser) {
-              errorElement.textContent = '邮箱已存在！';
-              return;
-            }
+          .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+          }
 
-            // 插入用户数据到 Supabase
-            const { data, error } = await supabase
-              .from('users')
-              .insert([
-                { 
-                  email: email, 
-                  password: password,
-                  created_at: new Date().toISOString()
+          label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+          }
+
+          input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+          }
+
+          button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+          }
+
+          button:hover {
+            background-color: #45a049;
+          }
+
+          .link {
+            margin-top: 15px;
+            display: block;
+            color: #4caf50;
+            text-decoration: none;
+          }
+
+          .link:hover {
+            text-decoration: underline;
+          }
+
+          .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>注册</h1>
+          <form id="register-form">
+            <div class="form-group">
+              <label for="email">邮箱</label>
+              <input type="email" id="email" required />
+            </div>
+            <div class="form-group">
+              <label for="password">密码</label>
+              <input type="password" id="password" required />
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">确认密码</label>
+              <input type="password" id="confirm-password" required />
+              <div id="password-error" class="error"></div>
+            </div>
+            <button type="submit">注册</button>
+          </form>
+          <a href="login.html" class="link">已有账号？立即登录</a>
+        </div>
+
+        <script src="../assets/supabase-js.min.js"></script>
+        <script>
+          // 正确的 Supabase 初始化方式
+          const supabaseUrl = "https://xjpzxbqzecdkqjtswnhj.supabase.co";
+          const supabaseKey =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqcHp4YnF6ZWNka3FqdHN3bmhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMTc3MjQsImV4cCI6MjA3Nzc5MzcyNH0.IMi53aS9t58hrDJj_R3Wmb6N89BT8O3XsGy2KeoCMrA";
+
+          // 修正：使用 window.supabase.createClient
+          const supabase = window.supabase.createClient(
+            supabaseUrl,
+            supabaseKey
+          );
+
+          // 确保 DOM 加载完成后再绑定事件
+          window.addEventListener("load", () => {
+            document
+              .getElementById("register-form")
+              .addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+                const confirmPassword =
+                  document.getElementById("confirm-password").value;
+                const errorElement = document.getElementById("password-error");
+
+                // 验证密码是否一致
+                if (password !== confirmPassword) {
+                  errorElement.textContent = "密码不一致！";
+                  return;
                 }
-              ], {
-                returning: 'minimal',
-                headers: {
-                  'Authorization': `Bearer ${supabaseKey}`,
-                  'Content-Type': 'application/json',
-                  'Prefer': 'return=representation'
+
+                try {
+                  // 检查邮箱是否已存在
+                  const { data: existingUser, error: queryError } =
+                    await supabase
+                      .from("users")
+                      .select("email")
+                      .eq("email", email)
+                      .maybeSingle();
+
+                  if (queryError) {
+                    errorElement.textContent = "网络错误，请重试！";
+                    console.error("Supabase 查询错误:", queryError);
+                    return;
+                  }
+
+                  if (existingUser) {
+                    errorElement.textContent = "邮箱已存在！";
+                    return;
+                  }
+
+                  // 插入用户数据到 Supabase
+                  const { data, error } = await supabase.from("users").insert(
+                    [
+                      {
+                        email: email,
+                        password: password,
+                        created_at: new Date().toISOString(),
+                      },
+                    ],
+                    {
+                      returning: "minimal",
+                      headers: {
+                        Authorization: `Bearer ${supabaseKey}`,
+                        "Content-Type": "application/json",
+                        Prefer: "return=representation",
+                      },
+                    }
+                  );
+
+                  if (error) {
+                    errorElement.textContent = `注册失败：${error.message}`;
+                    console.error("Supabase 插入错误:", error);
+                    return;
+                  }
+
+                  // 确保插入成功
+                  if (!data) {
+                    errorElement.textContent = "注册失败：数据未插入";
+                    console.error("Supabase 插入失败：无返回数据");
+                    return;
+                  }
+                  console.log("Supabase 插入成功:", data);
+
+                  alert("注册成功！请登录。");
+                  window.location.href = "login.html";
+                } catch (err) {
+                  errorElement.textContent = "注册失败，请重试！";
+                  console.error(err);
                 }
               });
-
-            if (error) {
-              errorElement.textContent = `注册失败：${error.message}`;
-              console.error('Supabase 插入错误:', error);
-              return;
-            }
-
-            // 确保插入成功
-            if (!data) {
-              errorElement.textContent = '注册失败：数据未插入';
-              console.error('Supabase 插入失败：无返回数据');
-              return;
-            }
-            console.log('Supabase 插入成功:', data);
-
-            alert('注册成功！请登录。');
-            window.location.href = 'login.html';
-          } catch (err) {
-            errorElement.textContent = '注册失败，请重试！';
-            console.error(err);
-          }
-        });
-      });
-    </script>
-      <div id="settings-modal" class="settings-modal">
-      <div class="settings-content">
-        <h2>设置</h2>
-        <div>
-          <label for="user-name">姓名</label>
-          <input type="text" id="user-name" class="settings-input">
-        </div>
-        <div>
-          <label for="user-email">邮箱</label>
-          <input type="email" id="user-email" class="settings-input">
-        </div>
-        <div>
-          <label for="theme-preference">主题偏好</label>
-          <select id="theme-preference" class="settings-input">
-            <option value="">默认</option>
-            <option value="dark-theme">暗色</option>
-            <option value="light-theme">亮色</option>
-          </select>
-        </div>
-        <div class="settings-buttons">
-          <button onclick="closeSettings()" class="cancel-button">取消</button>
-          <button onclick="saveSettings()" class="save-button">保存</button>
-        </div>
-      </div>
-    </div>
-  </body>
+          });
+        </script>
+      </body>
+    </html>
+  </head>
 </html>
