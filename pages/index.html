@@ -15,7 +15,7 @@
     <title>家智享</title>
     <script>
       // 检查用户是否登录
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      let currentUser = JSON.parse(localStorage.getItem('currentUser'));
       if (!currentUser) {
         window.location.href = 'login.html';
       }
@@ -110,7 +110,6 @@
 
     <script>
       // 显示用户邮箱
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       if (currentUser) {
         document.getElementById('user-email').textContent = currentUser.email;
       }
