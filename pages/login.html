@@ -11,76 +11,76 @@
     <script src="../scripts/theme.js"></script>
     <script src="../scripts/common.js"></script>
     <style>
-          body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-          }
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
 
-          .container {
-            width: 90%;
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          }
+      .container {
+        width: 90%;
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-          h1 {
-            margin-bottom: 20px;
-          }
+      h1 {
+        margin-bottom: 20px;
+      }
 
-          .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-          }
+      .form-group {
+        margin-bottom: 15px;
+        text-align: left;
+      }
 
-          label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-          }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
 
-          input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-          }
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
 
-          button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-          }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+      }
 
-          button:hover {
-            background-color: #45a049;
-          }
+      button:hover {
+        background-color: #45a049;
+      }
 
-          .link {
-            margin-top: 15px;
-            display: block;
-            color: #4caf50;
-            text-decoration: none;
-          }
+      .link {
+        margin-top: 15px;
+        display: block;
+        color: #4caf50;
+        text-decoration: none;
+      }
 
-          .link:hover {
-            text-decoration: underline;
-          }
-        </style>
+      .link:hover {
+        text-decoration: underline;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -106,10 +106,7 @@
       const supabaseUrl = "https://xjpzxbqzecdkqjtswnhj.supabase.co";
       const supabaseKey =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqcHp4YnF6ZWNka3FqdHN3bmhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMTc3MjQsImV4cCI6MjA3Nzc5MzcyNH0.IMi53aS9t58hrDJj_R3Wmb6N89BT8O3XsGy2KeoCMrA";
-      const supabase = window.supabase.createClient(
-        supabaseUrl,
-        supabaseKey
-      );
+      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
       document
         .getElementById("login-form")
@@ -152,7 +149,7 @@
             }
 
             localStorage.setItem("currentUser", JSON.stringify(user));
-            window.location.href = "index.html";
+            window.location.href = "dashboard.html";
           } catch (err) {
             alert(`登录失败：${err.message || "系统错误"}`);
             console.error("登录异常:", err);

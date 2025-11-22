@@ -1,107 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>家智享</title>
     <link rel="stylesheet" href="../styles/common.css" />
     <link rel="stylesheet" href="../styles/theme.css" />
+    <link rel="stylesheet" href="../assets/font-awesome.min.css" />
     <script src="../scripts/theme.js"></script>
-    <link
-      rel="stylesheet"
-      href="../styles/all.min.css"
-    />
     <script src="../scripts/common.js"></script>
-    <title>家智享</title>
     <style>
       body {
         font-family: Arial, sans-serif;
         text-align: center;
         margin: 0;
         padding: 0;
-        background-color: #f4f4f9;
-      }
-      header {
-        background-color: #4caf50;
-        color: white;
-        padding: 40px 0;
-      }
-      h1 {
-        margin: 0;
-      }
-      .container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: center;
-        height: 70vh;
+        align-items: center;
       }
-      .nav-links {
+
+      .main-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 60px 40px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+        backdrop-filter: blur(10px);
+      }
+
+      .logo {
+        font-size: 48px;
+        font-weight: bold;
+        color: #4caf50;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .subtitle {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 40px;
+      }
+
+      .auth-buttons {
         display: flex;
         flex-direction: column;
-        gap: 32px;
-        margin-top: 32px;
+        gap: 20px;
       }
-      .nav-link {
-        display: inline-block;
-        padding: 32px 52px;
-        background-color: #4caf50;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        font-size: 21px;
-        transition: background-color 0.3s;
-      }
-      .nav-link:hover {
-        background-color: #45a049;
-      }
-      .ledger-entry {
-        margin: 10px;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        background-color: white;
-      }
-      .input-form {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin: 20px 0;
-      }
-      .input-form input,
-      .input-form button {
-        padding: 10px;
-        font-size: 21px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-      }
-      .input-form button {
-        background-color: #4caf50;
-        color: white;
+
+      .auth-btn {
+        padding: 18px 40px;
+        font-size: 18px;
+        border: none;
+        border-radius: 50px;
         cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
       }
-      .input-form button:hover {
-        background-color: #45a049;
+
+      .login-btn {
+        background: linear-gradient(to right, #4CAF50, #2E7D32);
+        color: white;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+      }
+
+      .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+      }
+
+      .register-btn {
+        background: transparent;
+        color: #4caf50;
+        border: 2px solid #4caf50;
+      }
+
+      .register-btn:hover {
+        background: #4caf50;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .features {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid #eee;
+      }
+
+      .features h3 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .feature-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        text-align: left;
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .feature-item i {
+        color: #4caf50;
+        font-size: 16px;
+      }
+
+      @media (max-width: 600px) {
+        .main-container {
+          padding: 40px 20px;
+        }
+        
+        .feature-list {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <div id="avatar-container" class="avatar-container"></div>
-    </style>
-  </head>
-  <body>
-        <header>
-          <h1>家智享</h1>
-        </header>
-        <div class="container">
-          <div class="nav-links">
-            <a href="food-wheel.html" class="nav-link">美食决策机</a>
-            <a href="ai-ledger.html" class="nav-link">AI智能账本</a>
-            <a href="budget-management.html" class="nav-link">预算管理</a>
-            <a href="settings.html" class="nav-link">个人设置</a>
+    <div class="main-container">
+      <div class="logo">家智享</div>
+      <div class="subtitle">智能家庭管理，让生活更美好</div>
+      
+      <div class="auth-buttons">
+        <a href="login.html" class="auth-btn login-btn">
+          <i class="fas fa-sign-in-alt"></i> 登录
+        </a>
+        <a href="register.html" class="auth-btn register-btn">
+          <i class="fas fa-user-plus"></i> 注册
+        </a>
+      </div>
+
+      <div class="features">
+        <h3>功能特色</h3>
+        <div class="feature-list">
+          <div class="feature-item">
+            <i class="fas fa-utensils"></i>
+            <span>美食决策机</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-robot"></i>
+            <span>AI智能账本</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-chart-pie"></i>
+            <span>预算管理</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-cog"></i>
+            <span>个人设置</span>
           </div>
         </div>
-      </body>
-    </html>
-  </head>
+      </div>
+    </div>
+  </body>
 </html>
