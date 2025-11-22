@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,6 +13,13 @@
     />
     <script src="../scripts/common.js"></script>
     <title>家智享</title>
+    <script>
+      // 检查用户是否登录
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) {
+        window.location.href = 'login.html';
+      }
+    </script>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -87,21 +94,32 @@
   </head>
   <body>
     <div id="avatar-container" class="avatar-container"></div>
-    </style>
-  </head>
-  <body>
-        <header>
-          <h1>家智享</h1>
-        </header>
-        <div class="container">
-          <div class="nav-links">
-            <a href="food-wheel.html" class="nav-link">美食决策机</a>
-            <a href="ai-ledger.html" class="nav-link">AI智能账本</a>
-            <a href="budget-management.html" class="nav-link">预算管理</a>
-            <a href="settings.html" class="nav-link">个人设置</a>
-          </div>
-        </div>
-      </body>
-    </html>
-  </head>
+    <header>
+      <h1>家智享</h1>
+      <p>欢迎回来，<span id="user-email"></span>！</p>
+    </header>
+    <div class="container">
+      <div class="nav-links">
+        <a href="food-wheel.html" class="nav-link">美食决策机</a>
+        <a href="ai-ledger.html" class="nav-link">AI智能账本</a>
+        <a href="budget-management.html" class="nav-link">预算管理</a>
+        <a href="settings.html" class="nav-link">个人设置</a>
+        <a href="#" onclick="logout()" class="nav-link" style="background-color: #f44336;">退出登录</a>
+      </div>
+    </div>
+
+    <script>
+      // 显示用户邮箱
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (currentUser) {
+        document.getElementById('user-email').textContent = currentUser.email;
+      }
+
+      // 退出登录
+      function logout() {
+        localStorage.removeItem('currentUser');
+        window.location.href = 'login.html';
+      }
+    </script>
+  </body>
 </html>
