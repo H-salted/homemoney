@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>登录</title>
+    <link rel="stylesheet" href="styles/common.css" />
+    <link rel="stylesheet" href="styles/theme.css" />
+    <link rel="stylesheet" href="assets/font-awesome.min.css" />
+    <script src="scripts/theme.js"></script>
+    <script src="scripts/common.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+        text-align: left;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      .link {
+        margin-top: 15px;
+        display: block;
+        color: #4caf50;
+        text-decoration: none;
+      }
+
+      .link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h>家智享</h>
+      <h1>登录</h1>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">邮箱</label>
+          <input type="email" id="email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">密码</label>
+          <input type="password" id="password" required />
+        </div>
+        <button type="submit">登录</button>
+      </form>
+      <a href="register.html" class="link">没有账号？立即注册</a>
+    </div>
+
+    <script src="assets/supabase-js.min.js"></script>
+    <script>
+      // 初始化 Supabase 客户端
+      const supabaseUrl = "https://xjpzxbqzecdkqjtswnhj.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqcHp4YnF6ZWNka3FqdHN3bmhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyMTc3MjQsImV4cCI6MjA3Nzc5MzcyNH0.IMi53aS9t58hrDJj_R3Wmb6N89BT8O3XsGy2KeoCMrA";
+      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          // 验证邮箱格式
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            alert("请输入有效的邮箱地址！");
+            return;
+          }
+
+          // 验证用户信息
+          try {
+            const { data: user, error } = await supabase
+              .from("users")
+              .select("*")
+              .eq("email", email)
+              .maybeSingle();
+
+            if (error) {
+              alert(`登录失败：${error.message || "网络错误"}`);
+              console.error("Supabase 查询错误:", error);
+              return;
+            }
+
+            if (!user) {
+              alert("邮箱未注册！");
+              return;
+            }
+
+            // 验证密码（假设密码已哈希存储）
+            // 注意：此处仅为示例，实际应使用 bcrypt 或其他哈希库验证
+            const isPasswordValid = password === user.password;
+            if (!isPasswordValid) {
+              alert("密码错误！");
+              return;
+            }
+
+            localStorage.setItem("currentUser", JSON.stringify(user));
+            window.location.href = "dashboard.html";
+          } catch (err) {
+            alert(`登录失败：${err.message || "系统错误"}`);
+            console.error("登录异常:", err);
+          }
+        });
+    </script>
+  </body>
+</html>

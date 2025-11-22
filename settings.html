@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles/settings.css" />
+    <link rel="stylesheet" href="styles/theme.css" />
+    <script src="scripts/theme.js"></script>
+    <script src="scripts/auth-check.js"></script>
+    <title>个人设置</title>
+    <style>
+      /* 基础样式，确保页面正常显示 */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      .settings-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .settings-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+      }
+
+      .settings-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+      }
+
+      .settings-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        gap: 10px;
+      }
+
+      .settings-item label {
+        min-width: 150px;
+        font-weight: bold;
+      }
+
+      .settings-item input,
+      .settings-item select {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      .settings-item button {
+        padding: 8px 16px;
+        background: linear-gradient(to right, #4CAF50, #2E7D32);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .settings-item button:hover {
+        background-color: #0056b3;
+      }
+
+      .avatar-container {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .avatar-preview {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ddd;
+      }
+
+      .back-button {
+        padding: 8px 16px;
+        background-color: #6c757d;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+      }
+
+      .back-button:hover {
+        background-color: #545b62;
+      }
+
+      /* 主题样式 */
+      body.light {
+        background-color: #f5f5f5;
+        color: #333;
+      }
+
+      body.dark {
+        background-color: #1a1a1a;
+        color: #fff;
+      }
+
+      body.dark .settings-container {
+        background: #2d2d2d;
+        color: #fff;
+      }
+
+      body.dark .settings-section {
+        border-color: #444;
+      }
+
+      body.dark input,
+      body.dark select {
+        background-color: #333;
+        color: #fff;
+        border-color: #555;
+      }
+    </style>
+  </head>
+  <body class="light">
+    <div class="settings-container">
+      <div class="settings-header">
+        <h1>个人设置</h1>
+        <a href="index.html" class="back-button">返回首页</a>
+      </div>
+
+      <!-- 头像功能 -->
+      <div class="settings-section">
+        <h2>头像</h2>
+        <div class="settings-item">
+          <label for="avatar">头像</label>
+          <div class="avatar-container">
+            <img
+              id="avatar-preview"
+              class="avatar-preview"
+              src=""
+              alt="头像预览"
+            />
+            <div style="display: flex; flex-direction: column; gap: 10px">
+              <input type="file" id="avatar" accept="image/*" />
+              <div style="display: flex; gap: 10px">
+                <button onclick="uploadAvatar()">上传</button>
+                <button onclick="removeAvatar()">删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 账户与安全 -->
+      <div class="settings-section">
+        <h2>账户与安全</h2>
+        <div class="settings-item">
+          <label for="username">用户名</label>
+          <input type="text" id="username" placeholder="输入新用户名" />
+          <button onclick="updateUsername()">保存</button>
+        </div>
+      </div>
+
+      <!-- 隐私设置 -->
+      <div class="settings-section">
+        <h2>隐私设置</h2>
+        <div class="settings-item">
+          <label for="privacy-level">个人资料公开范围</label>
+          <select id="privacy-level">
+            <option value="public">公开</option>
+            <option value="friends">仅好友</option>
+            <option value="private">仅自己</option>
+          </select>
+          <button onclick="updatePrivacy()">保存</button>
+        </div>
+      </div>
+
+      <!-- 主题设置 -->
+      <div class="settings-section">
+        <h2>主题设置</h2>
+        <div class="settings-item">
+          <label for="theme">主题偏好</label>
+          <select id="theme">
+            <option value="light">亮色</option>
+            <option value="dark">暗色</option>
+          </select>
+          <button onclick="updateTheme()">应用</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 初始化页面
+      function initializePage() {
+        // 加载保存的用户名
+        const savedUsername = localStorage.getItem("username");
+        if (savedUsername) {
+          document.getElementById("username").value = savedUsername;
+        }
+
+        // 加载保存的头像
+        const savedAvatar = localStorage.getItem("avatar");
+        if (savedAvatar) {
+          document.getElementById("avatar-preview").src = savedAvatar;
+        } else {
+          // 设置默认头像
+          document.getElementById("avatar-preview").src =
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='40' fill='%23ccc'/%3E%3Ccircle cx='40' cy='30' r='15' fill='%23999'/%3E%3Cpath d='M20,70 a20,20 0 1,1 40,0' fill='%23999'/%3E%3C/svg%3E";
+        }
+
+        // 加载隐私设置
+        const savedPrivacy = localStorage.getItem("privacyLevel");
+        if (savedPrivacy) {
+          document.getElementById("privacy-level").value = savedPrivacy;
+        }
+
+        // 加载主题设置
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.getElementById("theme").value = savedTheme;
+        document.body.className = savedTheme;
+      }
+
+      // 更新用户名
+      function updateUsername() {
+        const username = document.getElementById("username").value.trim();
+        if (username) {
+          localStorage.setItem("username", username);
+          alert("用户名已更新！");
+        } else {
+          alert("请输入有效的用户名！");
+        }
+      }
+
+      // 上传头像
+      function uploadAvatar() {
+        const fileInput = document.getElementById("avatar");
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+
+          // 验证文件类型
+          if (!file.type.startsWith("image/")) {
+            alert("请选择图片文件！");
+            return;
+          }
+
+          // 验证文件大小（限制为 2MB）
+          if (file.size > 2 * 1024 * 1024) {
+            alert("图片大小不能超过 2MB！");
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            localStorage.setItem("avatar", e.target.result);
+            document.getElementById("avatar-preview").src = e.target.result;
+            alert("头像已上传！");
+            // 清空文件输入
+            fileInput.value = "";
+          };
+          reader.onerror = function () {
+            alert("头像上传失败，请重试！");
+          };
+          reader.readAsDataURL(file);
+        } else {
+          alert("请选择要上传的头像文件！");
+        }
+      }
+
+      // 删除头像
+      function removeAvatar() {
+        localStorage.removeItem("avatar");
+        // 重置为默认头像
+        document.getElementById("avatar-preview").src =
+          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='40' fill='%23ccc'/%3E%3Ccircle cx='40' cy='30' r='15' fill='%23999'/%3E%3Cpath d='M20,70 a20,20 0 1,1 40,0' fill='%23999'/%3E%3C/svg%3E";
+        alert("头像已删除！");
+      }
+
+      // 更新隐私设置
+      function updatePrivacy() {
+        const privacyLevel = document.getElementById("privacy-level").value;
+        localStorage.setItem("privacyLevel", privacyLevel);
+        alert("隐私设置已更新！");
+      }
+
+      // 更新主题
+      function updateTheme() {
+        const theme = document.getElementById("theme").value;
+        localStorage.setItem("theme", theme);
+        document.body.className = theme;
+        alert("主题已更新！");
+      }
+
+      // 页面加载完成后初始化
+      document.addEventListener("DOMContentLoaded", initializePage);
+    </script>
+  </body>
+</html>
