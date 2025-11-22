@@ -30,16 +30,23 @@
 ├── budget-management.html # 预算管理
 ├── settings.html       # 个人设置
 ├── assets/             # 静态资源
-│   ├── font-awesome.min.css
-│   └── supabase-js.min.js
+│   ├── font-awesome.min.css  # Font Awesome图标库
+│   └── supabase-js.min.js    # Supabase客户端库
 ├── scripts/            # JavaScript文件
 │   ├── auth-check.js   # 登录验证
 │   ├── common.js       # 通用功能
-│   └── theme.js        # 主题切换
+│   ├── theme.js        # 主题切换
+│   ├── food-wheel.js   # 美食决策功能
+│   ├── ai-ledger.js    # AI账本功能
+│   ├── budget-management.js # 预算管理功能
+│   ├── flatpickr.min.js # 日期选择器
+│   └── zh.js           # 中文本地化
 ├── styles/             # CSS样式文件
 │   ├── common.css      # 通用样式
 │   ├── theme.css       # 主题样式
-│   └── settings.css    # 设置页面样式
+│   ├── settings.css    # 设置页面样式
+│   ├── ai-ledger.css   # AI账本样式
+│   └── flatpickr.min.css # 日期选择器样式
 ├── netlify.toml        # Netlify配置文件
 └── _redirects          # URL重定向规则
 ```
